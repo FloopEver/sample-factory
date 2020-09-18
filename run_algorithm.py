@@ -5,7 +5,8 @@ from algorithms.utils.arguments import maybe_load_from_checkpoint, get_algo_clas
 
 def run_algorithm(cfg):
     cfg = maybe_load_from_checkpoint(cfg)
-
+    if cfg.encoder_custom == 'None':
+        cfg.encoder_custom = None
     algo = get_algo_class(cfg.algo)(cfg)
     algo.initialize()
     status = algo.run()
@@ -16,6 +17,8 @@ def run_algorithm(cfg):
 def main():
     """Script entry point."""
     cfg = parse_args()
+    if cfg.encoder_custom == 'None':
+        cfg.encoder_custom = None
     status = run_algorithm(cfg)
     return status
 
