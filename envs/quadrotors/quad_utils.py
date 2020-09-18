@@ -4,6 +4,7 @@ from envs.quadrotors.wrappers.additional_input import QuadsAdditionalInputWrappe
 from envs.quadrotors.wrappers.discrete_actions import QuadsDiscreteActionsWrapper
 from envs.quadrotors.wrappers.reward_shaping import QuadsRewardShapingWrapper, DEFAULT_QUAD_REWARD_SHAPING
 
+CUSTOM_ENCODER_INITIALIZED = False
 
 def make_quadrotor_env_single(cfg, **kwargs):
     from gym_art.quadrotor_single.quadrotor import QuadrotorEnv
@@ -48,6 +49,13 @@ def make_quadrotor_env_single(cfg, **kwargs):
 
 def make_quadrotor_env_multi(cfg, **kwargs):
     from gym_art.quadrotor_multi.quadrotor_multi import QuadrotorEnvMulti
+    global CUSTOM_ENCODER_INITIALIZED
+
+    # TODO: Make this less hacky
+    if cfg.encoder_custom is not None and not CUSTOM_ENCODER_INITIALIZED:
+        from envs.quadrotors.quad_multi_model import register_models
+        register_models()
+        CUSTOM_ENCODER_INITIALIZED = True
 
     quad = 'Crazyflie'
     dyn_randomize_every = dyn_randomization_ratio = None
